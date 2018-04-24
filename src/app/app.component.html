@@ -1,0 +1,51 @@
+<span class="glyphicon glyphicon-refresh glyphicon-spin spinner" *ngIf="loadig " > </span>
+
+<div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <a class="navbar-brand">{{pageTitle}}</a>
+            <ul class="nav navbar-nav">
+                <li routerLinkActive="active">
+                    <a [routerLink] = "['/welcome']">Home</a>
+                </li>
+                <li routerLinkActive="active" [routerLinkActiveOptions] = "{ exact: true }"> <!-- [routerLinkActiveOptions] = "{ exact: true }" como esta coincide con la de abajo nos aseguramos que solo funciona con esa Url -->
+                    <a [routerLink] = "['/products']"  >Product List</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a [routerLink] = "[ '/products', 0 ,'edit' ]" >Add Product</a><!-- En este caso usamos un 0 porque el 0 no se suele usar como Id asi que lo usamos para indicar que vamos a gregar un nuevo producto -->
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li *ngIf="authService.isLoggedIn()">
+                    <a>Welcome {{ authService.currentUser.userName }}</a>
+                </li>
+                <li *ngIf = "!_messageService.isDisplayedMessages ">
+                       <!-- <a [routerLink] = "[{ outlets: {popup: ['messages']} }]">Show Messages</a><!Comenzamos con outlets para la ruta secundaria, luego el nombre que le pusimos al outlet cuando configuramos la ruta el mesagges.module y le pasamos el nombre del path--> 
+                        <a (click)= "displayMessages()">Show Messages</a><!--Hacemos un metodo para redirecionar que esta en el app.component--> 
+                </li>
+                <li *ngIf = "_messageService.isDisplayedMessages ">
+                        <!-- <a [routerLink] = "[{ outlets: {popup: ['messages']} }]">Show Messages</a><!Comenzamos con outlets para la ruta secundaria, luego el nombre que le pusimos al outlet cuando configuramos la ruta el mesagges.module y le pasamos el nombre del path--> 
+                         <a (click)= "hideMessages()">Hide Messages</a><!--Hacemos un metodo para redirecionar que esta en el app.component--> 
+                 </li>
+                <li *ngIf="!authService.isLoggedIn()">
+                    <a [routerLink] = "['/login']">Log In</a>  
+                </li>
+                <li *ngIf="authService.isLoggedIn()">
+                    <a (click)="logOut()">Log Out</a>
+                </li>
+            </ul>          
+        </div>
+    </nav>
+    <div class="container">
+
+         <div class="row">
+               <div class="col-md-10 ">
+                   <router-outlet></router-outlet><!-- Lo usamos aqui para que los componentes aparezcan en este contendor comenzara con el de defercto que es "Welcome" -->
+                </div>
+               
+                <div class="col-md-2">
+                     <router-outlet name="popup"></router-outlet> <!-- Para usar rutas secundarias debemos darle un nombre unico para que reconozca el router-oultet de la secundaria, podemos agregar cantidad de rutas secundarias como querramos -->   
+                </div>
+         </div>
+    </div>
+</div>
